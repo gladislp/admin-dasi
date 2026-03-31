@@ -37,6 +37,5 @@ const AppRoutes = () => {
       <Route path="/profile" element={<Profile />} />
     </Routes>
   );
-};
-
+}
 export default AppRoutes;

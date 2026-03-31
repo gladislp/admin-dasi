@@ -44,6 +44,10 @@ const Navbar = () => {
         <div className="w-8 h-8 flex items-center justify-center">
           <FontAwesomeIcon icon={faBell} className="text-xl text-blue-500" />
         </div>
+        
+        <NavLink to="/profile" className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition">
+          <FontAwesomeIcon icon={faCircleUser} className="text-3xl text-blue-500" />
+        </NavLink>
 
         <NavLink
           to="/profile"
