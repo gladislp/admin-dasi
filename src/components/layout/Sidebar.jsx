@@ -1,5 +1,6 @@
+import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
+import { faBagShopping, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
   return (
@@ -11,56 +12,132 @@ const Sidebar = () => {
         <FontAwesomeIcon icon={faBagShopping} className="text-white text-lg" />
     </div>
     <div className="ml-3">
-        <h1 className="font-bold  text-lg">DASI</h1>
+        <h1 className="font-bold text-lg">DASI</h1>
         <p className="text-sm text-blue-500">Admin Panel</p>
     </div>
     </div>
 
-      {/* Menu */}
-      <nav className="flex-1 p-4 space-y-2">
+    {/* Menu */}
+    <nav className="flex-1 p-4 space-y-2">
 
-        <p className="text-xs text-gray-400 uppercase">Utama</p>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Dashboard 
-        </div>
-        <div className="border-t my-4"></div>
+      <p className="text-xs text-gray-400 uppercase">Utama</p>
 
-        <p className="text-xs text-gray-400 uppercase mt-4">Katalog</p>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Produk
-        </div>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Kategori
-        </div>
-        <div className="border-t my-4"></div>
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Dashboard
+      </NavLink>
 
-        <p className="text-xs text-gray-400 uppercase mt-4">Transaksi</p>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Pesanan
-        </div>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Pembayaran
-        </div>
-        <div className="border-t my-4"></div>
+      <div className="border-t my-4"></div>
 
-        <p className="text-xs text-gray-400 uppercase mt-4">Pengguna</p>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Pengguna
-        </div>
-        <div className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded">
-          Ulasan
-        </div>
+      <p className="text-xs text-gray-400 uppercase mt-4">Katalog</p>
 
-      </nav>
+      <NavLink
+        to="/products"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Produk
+      </NavLink>
+
+      <NavLink
+        to="/categories"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Kategori
+      </NavLink>
+
+      <div className="border-t my-4"></div>
+
+      <p className="text-xs text-gray-400 uppercase mt-4">Transaksi</p>
+
+      <NavLink
+        to="/orders"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Pesanan
+      </NavLink>
+
+      <NavLink
+        to="/payments"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Pembayaran
+      </NavLink>
+
+      <div className="border-t my-4"></div>
+
+      <p className="text-xs text-gray-400 uppercase mt-4">Pengguna</p>
+
+      <NavLink
+        to="/users"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Pengguna
+      </NavLink>
+
+      <NavLink
+        to="/reviews"
+        className={({ isActive }) =>
+          `block p-2 rounded ${
+            isActive
+              ? "bg-blue-100 text-blue-500"
+              : "hover:bg-blue-50 hover:text-blue-500"
+          }`
+        }
+      >
+        Ulasan
+      </NavLink>
+
+    </nav>
 
       {/* User */}
-        {/* <div className="p-4 border-t flex items-center gap-3">
-            <FontAwesomeIcon icon={faCircleUser} className="text-gray-500 text-xl" />
+      <NavLink to="/profile">
+        <div className="p-4 border-t flex items-center gap-3">
+            <FontAwesomeIcon icon={faCircleUser} className="text-gray-500 text-3xl" />
             <div className="flex flex-col">
-                <div className="text-lg font-medium">Admin DASI</div>
+                <div className="text-sm font-medium">Admin DASI</div>
                 <div className="text-sm text-blue-500">admindasi.id</div>
             </div>
-        </div> */}
+        </div>
+      </NavLink>
+      
     </aside>
   );
 };
