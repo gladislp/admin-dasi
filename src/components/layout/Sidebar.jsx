@@ -2,34 +2,28 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBagShopping,
-  faCircleUser,
+faBagShopping,
+faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
 import api from "../../lib/api";
 
 const Sidebar = () => {
-  const [user, setUser] = useState(null);
+const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("admin_token");
+useEffect(() => {
+const fetchUser = async () => {
+try {
+const res = await api.get("/users/me");
+setUser(res.data);
+} catch (error) {
+console.log("Gagal ambil user", error?.response?.data || error.message);
+setUser(null);
+}
+};
 
-        const res = await api.get("/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+fetchUser();
 
-        setUser(res.data?.data || res.data);
-      } catch (error) {
-        console.log("Gagal ambil user", error?.response?.data || error.message);
-        setUser(null);
-      }
-    };
-
-    fetchUser();
-  }, []);
+}, []);
 
   return (
     <aside className="w-64 bg-white border-r h-screen flex flex-col">

@@ -18,7 +18,6 @@ const AddProduct = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setForm({
       ...form,
       [name]: type === "checkbox" ? checked : value,
@@ -34,11 +33,9 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const token = localStorage.getItem("token");
-
       const formData = new FormData();
+
       formData.append("name", form.name);
       formData.append("description", form.description);
       formData.append("category", form.category);
@@ -47,20 +44,12 @@ const AddProduct = () => {
       formData.append("active", form.active);
       formData.append("thumbnail", form.file);
 
-      await api.post("/products", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await api.post("/products", formData);
 
       alert("Produk berhasil ditambahkan!");
       navigate("/products");
     } catch (error) {
-      console.log(
-        "Gagal tambah produk",
-        error.response?.data || error.message
-      );
+      console.log("Gagal tambah produk", error.response?.data || error.message);
       alert("Gagal tambah produk");
     }
   };

@@ -22,6 +22,7 @@ const Navbar = () => {
     if (path === "/orders") return "Pesanan";
     if (path === "/users") return "Pengguna";
     if (path === "/profile") return "Profile";
+    if (path === "/reviews") return "Ulasan";
 
     return "Admin";
   };

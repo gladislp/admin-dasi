@@ -19,8 +19,7 @@ const AddCategory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await api.get("/products"); // ⬅️ FIXED
-
+        const res = await api.get("/products");
         setAllProducts(res.data || []);
       } catch (error) {
         console.log(
@@ -33,25 +32,34 @@ const AddCategory = () => {
     fetchProducts();
   }, []);
 
+  // HANDLE INPUT CHANGE
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // ADD PRODUCT (FIX SAFE)
+  const handleAddProduct = (product) => {
+    setSelectedProducts((prev) => {
+      const exists = prev.some(
+        (p) => String(p._id) === String(product._id)
+      );
+
+      if (exists) return prev;
+
+      return [...prev, product];
     });
   };
 
-  // ADD PRODUCT
-  const handleAddProduct = (product) => {
-    if (!selectedProducts.find((p) => p._id === product._id)) {
-      setSelectedProducts([...selectedProducts, product]);
-    }
-  };
-
-  // REMOVE PRODUCT
+  // REMOVE PRODUCT (FIX SAFE)
   const handleRemoveProduct = (id) => {
-    setSelectedProducts(selectedProducts.filter((p) => p._id !== id));
+    setSelectedProducts((prev) =>
+      prev.filter((p) => String(p._id) !== String(id))
+    );
   };
 
   // SUBMIT CATEGORY
@@ -60,18 +68,19 @@ const AddCategory = () => {
 
     try {
       const payload = {
-        name: form.name,
-        icon: form.icon,
+        name: form.name.trim(),
+        icon: form.icon || "📦",
         active: form.active,
         products: selectedProducts.map((p) => p._id),
       };
 
-      const res = await api.post("/categories", payload); // ⬅️ FIXED
+      await api.post("/categories", payload);
 
       alert("Kategori berhasil ditambahkan!");
       navigate("/categories");
     } catch (error) {
       console.log(
+        "ERROR:",
         error.response?.data || error.message
       );
       alert("Gagal tambah kategori");
@@ -81,13 +90,6 @@ const AddCategory = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Tambahkan kategori baru ke dalam sistem
-          </p>
-        </div>
-
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-xl shadow space-y-6"

@@ -1,93 +1,71 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { api } from "../services/api";
+import api from "../lib/api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+const [user, setUser] = useState(null);
+const [loading, setLoading] = useState(true);
 
-  // INIT USER DARI LOCALSTORAGE
-  useEffect(() => {
-    const savedUser = localStorage.getItem("admin_user");
-    const token = localStorage.getItem("admin_token");
+useEffect(() => {
+try {
+const savedUser = localStorage.getItem("admin_user");
+const token = localStorage.getItem("admin_token");
+  if (savedUser && token) {
+    setUser(JSON.parse(savedUser));
+  }
+} catch (err) {
+  console.log("Auth init error:", err);
+  localStorage.clear();
+}
 
-    if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
-    }
+setLoading(false);
 
-    setLoading(false);
-  }, []);
+}, []);
 
-  // LOGIN FUNCTION
-  const login = async (email, password) => {
-    try {
-      const res = await api.post("/auth/signin", {
-        email,
-        password,
-      });
+const login = async (email, password) => {
+try {
+const res = await api.post("/auth/signin", {
+email,
+password,
+});
+  const data = res.data;
 
-      const data = res.data;
+  const token = data.token;
 
-      // fleksibel tergantung backend kamu
-      const user = data.user || data;
-      const token = data.token;
+  if (!token) {
+    return { success: false, message: "Token tidak ada" };
+  }
 
-      if (!token) {
-        return {
-          success: false,
-          message: "Token tidak ditemukan dari server",
-        };
-      }
+  if (data.role !== "admin") {
+    return { success: false, message: "Admin only" };
+  }
 
-      // hanya admin boleh masuk
-      if (user.role !== "admin") {
-        return {
-          success: false,
-          message: "Access denied. Admin only.",
-        };
-      }
+  localStorage.setItem("admin_token", token);
+  localStorage.setItem("admin_user", JSON.stringify(data));
 
-      // simpan ke localStorage
-      localStorage.setItem("admin_token", token);
-      localStorage.setItem("admin_user", JSON.stringify(user));
+  setUser(data);
 
-      setUser(user);
-
-      return {
-        success: true,
-        user,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message:
-          error.response?.data?.message ||
-          error.message ||
-          "Login gagal",
-      };
-    }
+  return { success: true };
+} catch (error) {
+  return {
+    success: false,
+    message:
+      error.response?.data?.message || "Login gagal",
   };
+}
+};
 
-  // LOGOUT
-  const logout = () => {
-    localStorage.removeItem("admin_token");
-    localStorage.removeItem("admin_user");
-    setUser(null);
-  };
+const logout = () => {
+localStorage.clear();
+setUser(null);
+};
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        loading,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+return (
+<AuthContext.Provider value={{ user, login, logout, loading }}>
+{children}
+</AuthContext.Provider>
+);
 }
 
 export const useAuth = () => useContext(AuthContext);

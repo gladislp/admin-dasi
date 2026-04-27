@@ -12,6 +12,18 @@ const Produk = () => {
   const [category, setCategory] = useState("all");
   const [sortPrice, setSortPrice] = useState("");
 
+const deleteProduct = async (id) => {
+  try {
+    await api.delete(`/products/${id}`);
+
+    setProducts((prev) =>
+      prev.filter((p) => p._id !== id)
+    );
+  } catch (error) {
+    console.log("Gagal delete:", error.response?.data || error.message);
+  }
+};
+
   // FETCH PRODUCTS
   useEffect(() => {
     const fetchProducts = async () => {
@@ -199,7 +211,10 @@ const Produk = () => {
                           </button>
                         </NavLink>
 
-                        <button className="rounded-lg text-red-600 hover:bg-red-50 transition">
+                        <button
+                          onClick={() => deleteProduct(product._id)}
+                          className="rounded-lg text-red-600 hover:bg-red-50 transition"
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

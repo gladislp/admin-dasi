@@ -27,14 +27,12 @@ const Dashboard = () => {
 
         const data = res.data;
 
-        setStats(
-          data.stats || {
-            revenue: 0,
-            orders: 0,
-            users: 0,
-            products: 0,
-          }
-        );
+        setStats({
+          revenue: data.totalRevenue || 0,
+          orders: data.totalTransactions || 0,
+          users: data.totalUsers || 0,
+          products: data.totalProducts || 0,
+        });
 
         setRecentOrders(data.recent_orders || []);
 

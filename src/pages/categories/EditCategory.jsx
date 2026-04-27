@@ -16,7 +16,6 @@ const EditCategory = () => {
     const fetchProducts = async () => {
       try {
         const res = await api.get("/products");
-
         setAllProducts(res.data || []);
       } catch (error) {
         console.log(
@@ -29,16 +28,20 @@ const EditCategory = () => {
     fetchProducts();
   }, []);
 
-  // FETCH CATEGORY DETAIL
+  // FETCH CATEGORY
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const res = await api.get(`/categories/${id}`);
-
         const data = res.data;
 
         setCategoryName(data.name || "");
-        setProducts(data.products || []);
+
+        setProducts(
+          (data.products || []).map((p) =>
+            typeof p === "object" ? p : { _id: p }
+          )
+        );
       } catch (error) {
         console.log(
           "Gagal ambil kategori",
@@ -52,14 +55,22 @@ const EditCategory = () => {
 
   // ADD PRODUCT
   const handleAdd = (product) => {
-    if (!products.find((p) => p._id === product._id)) {
-      setProducts([...products, product]);
-    }
+    setProducts((prev) => {
+      const exists = prev.some(
+        (p) => String(p._id) === String(product._id)
+      );
+
+      if (exists) return prev;
+
+      return [...prev, product];
+    });
   };
 
   // REMOVE PRODUCT
   const handleRemove = (productId) => {
-    setProducts(products.filter((p) => p._id !== productId));
+    setProducts((prev) =>
+      prev.filter((p) => String(p._id) !== String(productId))
+    );
   };
 
   // SUBMIT UPDATE CATEGORY

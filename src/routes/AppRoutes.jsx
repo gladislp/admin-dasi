@@ -21,10 +21,10 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* AUTH */}
-      <Route path="/signin" element={<Signin />} />
+      <Route path="/" element={<Signin />} />
 
       {/* DASHBOARD */}
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
 
       {/* PRODUCTS */}
       <Route path="/products" element={<Produk />} />
